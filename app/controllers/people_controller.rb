@@ -38,7 +38,7 @@ class PeopleController < ApplicationController
     else
       render json: {
         inserted: inserted_people.map { |person| { person:, url: person_url(person) } },
-        failed: failed_people
+        failed: failed_people.map     { |person| { person:, errors: person.errors }}
       }, status: :multi_status
     end
   end
