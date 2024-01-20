@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  rails:
+    build:
+      context: .
+      dockerfile: docker/rails/Dockerfile
+    environment:
+      RAILS_ENV: development
+      DATABASE_URL: postgres://greenatom:password@db/greenatom
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    command: ["dockerize", "-wait", "tcp://db:5432", "bundle", "exec", "rails", "server"]
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: greenatom
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: greenatom
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker/volumes/postgresql_data:/var/lib/postgresql/data
